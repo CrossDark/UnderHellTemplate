@@ -88,7 +88,7 @@
     fill: darkred,
     weight: "regular",
     // style: "italic",
-    smallcaps(it.body),
+    smallcaps(it),
   ))
 
   // 二级标题样式:带黄色下划线 / Level-2 heading: with yellow underline
@@ -102,7 +102,7 @@
     weight: "regular",
 
   )[
-    #box(width: 100%, inset: (bottom: 4pt), stroke: (bottom: 1pt + darkyellow))[#smallcaps(it.body)]
+    #box(width: 100%, inset: (bottom: 4pt), stroke: (bottom: 1pt + darkyellow))[#smallcaps(it)]
   ])
 
   // 正文背景图:默认或自定义 / Body background image: default or custom
