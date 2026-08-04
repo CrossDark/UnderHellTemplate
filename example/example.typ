@@ -1,4 +1,4 @@
-#import "@preview/dragonling:0.3.1": *
+#import "../lib.typ": *
 
 #show: dndmodule.with(
   title: "A Date with Destiny",
