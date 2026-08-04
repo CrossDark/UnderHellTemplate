@@ -114,6 +114,26 @@
 
 ![Bottom fig](https://github.com/user-attachments/assets/8ed0d215-245c-49d9-987a-4c8faf3392c7)
 
+## 附录
+
+`appendix` 函数用于在文末生成附录章节,自动将标题编号切换为字母格式(附录 A,子标题 A.1, A.1.1 ...)并重置计数器,避免与正文章节编号冲突。
+
+- `title`:附录总标题,默认 `"附录"`。
+- `numbering-fmt`:附录标题编号格式,默认 `"A.1."`。
+- `..body`:附录正文内容。
+
+```typst
+#appendix[
+  == 附录子标题
+  附录正文内容...
+]
+
+// 也可通过 include 引入独立的附录文件
+#appendix[
+  #include "附录文件.typ"
+]
+```
+
 ## 致谢
 
 灵感来自 [DND LaTeX module](https://github.com/rpgtex/DND-5e-LaTeX-Template)。

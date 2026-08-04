@@ -427,6 +427,32 @@ columns: 1)[
 ]
 
 // ------------------------------------------------------------
+// appendix:附录功能 / Appendix helper
+//   title         - 附录总标题(默认 "附录")/ Appendix master title
+//   numbering-fmt - 附录标题编号格式(默认 "A.1.",即附录 A 及其子标题 A.1, A.1.1)/
+//                   Appendix heading numbering format
+//   ..body        - 附录正文内容 / Appendix body content
+//
+// 用法 / Usage:
+//   #appendix[
+//     == 附录子标题
+//     内容...
+//   ]
+// 也可通过 include 引入附录文件 / Or include an appendix file:
+//   #appendix[#include "附录文件.typ"]
+// ------------------------------------------------------------
+#let appendix(title: "附录", numbering-fmt: "A.1.", ..body) = [
+  // 切换标题编号为字母格式(附录 A, A.1, A.1.1 ...)/
+  // Switch heading numbering to letter format
+  #set heading(numbering: numbering-fmt)
+  // 重置标题计数器,使附录从 A 开始 / Reset heading counter so appendix starts at A
+  #counter(heading).update(0)
+  // 附录总标题 / Appendix master heading
+  #heading(level: 1, title)
+  ..body
+]
+
+// ------------------------------------------------------------
 // trademarks:商标与版权声明 / Trademark and copyright notice
 // 用于文档末尾的法定声明 / Used at the end of the document for legal notice
 // ------------------------------------------------------------
