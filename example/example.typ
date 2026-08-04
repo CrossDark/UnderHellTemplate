@@ -1,4 +1,4 @@
-#import "../lib.typ": *
+#import "@preview/underhell:0.3.1": *
 
 #show: dndmodule.with(
   title: "A Date with Destiny",

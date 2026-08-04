@@ -1,10 +1,10 @@
 [package]
-name = "地狱之下"
+name = "underhell"
 version = "0.3.1"
 entrypoint = "lib.typ"
 authors = ["Colin Jacobs", "跨越晨昏"]
 license = "MIT"
-description = "用于创建龙与地下城 5E 内容,包括冒险、属性方块、法术卡。本仓库为地狱之下项目的文档模板。"
+description = "用于创建龙与地下城 5E 内容,包括冒险、属性方块、法术卡。"
 repository = "https://github.com/CrossDark/UnderHellTemplate"
 keywords = ["roleplaying", "dnd", "dungeons-dragons", "rpg", "template", "gaming"]
 categories = ["layout", "report"]
