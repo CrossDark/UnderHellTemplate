@@ -6,7 +6,7 @@
 
 这是一个用于 DND 5E 内容的 [Typst](https://typst.app) 模板,适用于 [DMs Guild](https://www.dmsguild.com) 等场景。
 
-模板名为 `underhell`,已发布至 Typst Universe,可通过 `#import "@preview/underhell:0.3.1": *` 导入。本仓库内_地狱之下_项目自身则通过相对路径引用:`#import "../模板/lib.typ": *`。
+模板名为 `underhell`,已发布至 Typst Universe,可通过 `#import "@preview/underhell:0.1.0": *` 导入。本仓库内_地狱之下_项目自身则通过相对路径引用:`#import "../模板/lib.typ": *`。
 
 **注意**:本包已更新以兼容最新版本的 Typst (0.13),可提交至 Typst Universe。
 
