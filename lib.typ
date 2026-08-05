@@ -41,6 +41,9 @@
 //   bg           - 正文背景,"default" 使用默认背景,或传入自定义图 / Body background
 //   lang         - 语言代码(如 "en"/"zh"/"it"),决定加载哪个 languages/*.toml
 //                  Language code, determines which languages/*.toml to load
+//   print        - 打印模式:去除背景图/封面图、单栏、宽边距、纯黑文字、简化页脚
+//                  Print mode: no background/cover images, single column, wider margins,
+//                  pure black text, simplified footer (for ink-saving physical print)
 // ------------------------------------------------------------
 #let dndmodule(title: "",
               author: "",
@@ -53,6 +56,7 @@
               add-title: true,
               bg: "default",
               lang: "en",
+              print: false,
   body) = {
   // 设置文档元数据 / Set document metadata
   set document(author: author, title: title)
@@ -81,86 +85,128 @@
     language.update(lang-toml)
   }
 
-  // 一级标题样式:小型大写、深红色 / Level-1 heading: smallcaps, dark red
+  // 打印模式:标题用纯黑而非深红,省墨且对比度高
+  // Print mode: headings in pure black instead of dark red (ink-saving, higher contrast)
+  let heading-fill = if print { black } else { darkred }
+
+  // 一级标题样式:小型大写、深红色(打印模式为黑色)/ Level-1 heading: smallcaps
   show heading: it => block(text(
     ..header-font-args,
     size: 1.5em,
-    fill: darkred,
+    fill: heading-fill,
     weight: "regular",
     // style: "italic",
     smallcaps(it),
   ))
 
-  // 二级标题样式:带黄色下划线 / Level-2 heading: with yellow underline
+  // 二级标题样式:带黄色下划线(打印模式去掉下划线)/ Level-2 heading
   show heading.where(
     level: 2
   ): it => block(text(
     ..header-font-args,
     size: 1.5em,
 
-    fill: darkred,
+    fill: heading-fill,
     weight: "regular",
 
   )[
-    #box(width: 100%, inset: (bottom: 4pt), stroke: (bottom: 1pt + darkyellow))[#smallcaps(it)]
+    #box(width: 100%, inset: (bottom: 4pt), stroke: (bottom: if print { 0pt } else { 1pt + darkyellow }))[#smallcaps(it)]
   ])
 
-  // 正文背景图:默认或自定义 / Body background image: default or custom
-  let bg-img = if bg == "default" {
+  // 正文背景图:默认或自定义;打印模式禁用背景 / Body background
+  let bg-img = if print or bg == none {
+    none
+  } else if bg == "default" {
     image("img/background.jpg", width: 110%)
   } else {
     bg
   }
 
-  // Page settings / 页面设置:双栏、页码、页脚
-  set page(paper,
-    flipped: false,
-    margin: (left: 15mm, right: 15mm, top: 30mm, bottom: 30mm),
-    numbering: "1",
-    number-align: start,
-    columns: 2,
-    background: bg-img,
-    footer: context { footer.get()
-      footer.update(footer-content)
-    }
+  // 根据打印模式构造页面参数(必须在 if 块外 set,否则词法作用域不延伸)
+  // Build page args based on print mode (must set outside if block due to lexical scoping)
+  let page-args = if print {
+    // 打印模式:双栏、宽边距(装订余量)、无背景、简化页脚(仅页码)
+    // Print mode: two columns, wider margins (binding), no background, simple footer
+    (
+      flipped: false,
+      margin: (left: 25mm, right: 20mm, top: 25mm, bottom: 25mm),
+      numbering: "1",
+      number-align: center,
+      columns: 2,
+      background: none,
+      footer: context {
+        if here().page() > 1 {
+          align(center)[#here().page()]
+        }
+      },
     )
+  } else {
+    (
+      flipped: false,
+      margin: (left: 15mm, right: 15mm, top: 30mm, bottom: 30mm),
+      numbering: "1",
+      number-align: start,
+      columns: 2,
+      background: bg-img,
+      footer: context { footer.get()
+        footer.update(footer-content)
+      },
+    )
+  }
+  set page(paper, ..page-args)
+
   // 副标题非空时追加换行,便于排版 / Append newline to subtitle if non-empty
   if subtitle.len() > 0 {
     subtitle = subtitle + "\n"
   }
 
-  // FRONT PAGE / 封面页(单栏)
-  page(background: cover, margin: (top: 10mm, bottom: 5mm),
-columns: 1)[
-  #if add-title {
-    // 顶部居中大标题 / Top-center large title
-    place(
-      top + center,
-      box(fill: rgb("#00000066"), inset: 10%, text(fill: white, size: 60pt, weight: 800, upper(title)))
-    )
-   }
-
-    #if subtitle.len() > 0 {
-    // 底部副标题(可选作者名)/ Bottom subtitle (with optional author)
-    place(
-      bottom + center,
-      dy: -0.2cm,
-      box(width: 80%, fill: rgb("#00000066"), inset: (left:10pt, right:10pt, top:10pt, bottom: 10pt), text(fill: white, size:20pt)[#subtitle #if not fancy-author {"by " + author}]
-    ))}
-
-    #if logo != none {
-      // 右下角 logo / Logo at bottom-right
-      place(dx: 91%, dy: 100%-2.5cm,
-        logo // image("img/DMsGuildLogo.jpg", width: 13%)
+  // 封面页 / Front page
+  if print {
+    // 打印模式封面:纯白背景,黑色文字,无装饰图 / Print cover: white bg, black text
+    page(background: none, margin: (top: 40mm, bottom: 20mm), columns: 1)[
+      #if add-title {
+        place(top + center, text(fill: black, size: 48pt, weight: 800, upper(title)))
+      }
+      #if subtitle.len() > 0 {
+        place(bottom + center, dy: -1cm,
+          text(fill: black, size: 18pt)[#subtitle #if not fancy-author {"by " + author}]
+        )
+      }
+    ]
+  } else {
+    // FRONT PAGE / 封面页(单栏)
+    page(background: cover, margin: (top: 10mm, bottom: 5mm),
+  columns: 1)[
+    #if add-title {
+      // 顶部居中大标题 / Top-center large title
+      place(
+        top + center,
+        box(fill: rgb("#00000066"), inset: 10%, text(fill: white, size: 60pt, weight: 800, upper(title)))
       )
-    }
+     }
 
-    #if fancy-author {
-      // 花式作者展示:火焰图案 + 作者名 / Fancy author: fire splash + author name
-      place(dx: -10%, dy: 73%, image("img/fire_splash.svg", width: 60%))
-      place(dx: -10% + 0.7cm, dy: 73% + 0.7cm)[#text(size: 18pt, fill: white, weight: 700)[by #author]]
-    }
-  ]
+      #if subtitle.len() > 0 {
+      // 底部副标题(可选作者名)/ Bottom subtitle (with optional author)
+      place(
+        bottom + center,
+        dy: -0.2cm,
+        box(width: 80%, fill: rgb("#00000066"), inset: (left:10pt, right:10pt, top:10pt, bottom: 10pt), text(fill: white, size:20pt)[#subtitle #if not fancy-author {"by " + author}]
+      ))}
+
+      #if logo != none {
+        // 右下角 logo / Logo at bottom-right
+        place(dx: 91%, dy: 100%-2.5cm,
+          logo // image("img/DMsGuildLogo.jpg", width: 13%)
+        )
+      }
+
+      #if fancy-author {
+        // 花式作者展示:火焰图案 + 作者名 / Fancy author: fire splash + author name
+        place(dx: -10%, dy: 73%, image("img/fire_splash.svg", width: 60%))
+        place(dx: -10% + 0.7cm, dy: 73% + 0.7cm)[#text(size: 18pt, fill: white, weight: 700)[by #author]]
+      }
+    ]
+  }
 
   // 应用正文字体(来自语言 TOML,优先级低于用户在文章中 set text(font: ...) 的自定义)
   // Apply body fonts from language TOML; user's #set text(font: ...) in body overrides this
