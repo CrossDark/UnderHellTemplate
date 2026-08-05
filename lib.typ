@@ -48,6 +48,12 @@
 //                  pure black text, simplified footer (for ink-saving physical print).
 //                  Defaults to reading --input print=true at compile time;
 //                  documents can override with print: true/false
+//   screen       - 小屏模式:单栏、保留背景与彩色装饰、窄边距、较小字号
+//                  适合手机/平板等窄屏设备阅读
+//                  默认自动读取编译时输入变量 --input screen=true;
+//                  Screen mode: single column, keeps background & colors, narrow margins,
+//                  smaller font size. For reading on phones/tablets.
+//                  Defaults to reading --input screen=true at compile time
 // ------------------------------------------------------------
 #let dndmodule(title: "",
               author: "",
@@ -61,6 +67,7 @@
               bg: "default",
               lang: "en",
               print: "print" in sys.inputs and sys.inputs.print == "true",
+              screen: "screen" in sys.inputs and sys.inputs.screen == "true",
   body) = {
   // 设置文档元数据 / Set document metadata
   set document(author: author, title: title)
@@ -89,8 +96,8 @@
     language.update(lang-toml)
   }
 
-  // 打印模式:标题用纯黑而非深红,省墨且对比度高
-  // Print mode: headings in pure black instead of dark red (ink-saving, higher contrast)
+  // 打印模式:标题用纯黑而非深红,省墨且对比度高;小屏模式保留深红
+  // Print mode: headings in pure black; screen mode keeps dark red
   let heading-fill = if print { black } else { darkred }
 
   // 一级标题样式:小型大写、深红色(打印模式为黑色)/ Level-1 heading: smallcaps
@@ -117,7 +124,7 @@
     #box(width: 100%, inset: (bottom: 4pt), stroke: (bottom: if print { 0pt } else { 1pt + darkyellow }))[#smallcaps(it)]
   ])
 
-  // 正文背景图:默认或自定义;打印模式禁用背景 / Body background
+  // 正文背景图:打印模式禁用;小屏/普通模式保留 / Body background
   let bg-img = if print or bg == none {
     none
   } else if bg == "default" {
@@ -126,8 +133,10 @@
     bg
   }
 
-  // 根据打印模式构造页面参数(必须在 if 块外 set,否则词法作用域不延伸)
-  // Build page args based on print mode (must set outside if block due to lexical scoping)
+  // 小屏模式字号在下方 text-args 中统一设置 / Screen font size set in text-args below
+
+  // 根据模式构造页面参数(必须在 if 块外 set,否则词法作用域不延伸)
+  // Build page args based on mode (must set outside if block due to lexical scoping)
   let page-args = if print {
     // 打印模式:双栏、宽边距(装订余量)、无背景、简化页脚(仅页码)
     // Print mode: two columns, wider margins (binding), no background, simple footer
@@ -138,6 +147,22 @@
       number-align: center,
       columns: 2,
       background: none,
+      footer: context {
+        if here().page() > 1 {
+          align(center)[#here().page()]
+        }
+      },
+    )
+  } else if screen {
+    // 小屏模式:单栏、窄边距、保留背景、简化页脚
+    // Screen mode: single column, narrow margins, keep background, simple footer
+    (
+      flipped: false,
+      margin: (left: 10mm, right: 10mm, top: 15mm, bottom: 15mm),
+      numbering: "1",
+      number-align: center,
+      columns: 1,
+      background: bg-img,
       footer: context {
         if here().page() > 1 {
           align(center)[#here().page()]
@@ -175,6 +200,22 @@
         place(bottom + center, dy: -1cm,
           text(fill: black, size: 18pt)[#subtitle #if not fancy-author {"by " + author}]
         )
+      }
+    ]
+  } else if screen {
+    // 小屏模式封面:保留背景图与彩色标题,缩小字号 / Screen cover: keep bg, smaller text
+    page(background: cover, margin: (top: 20mm, bottom: 10mm), columns: 1)[
+      #if add-title {
+        place(top + center,
+          box(fill: rgb("#00000066"), inset: 8%, text(fill: white, size: 36pt, weight: 800, upper(title)))
+        )
+      }
+      #if subtitle.len() > 0 {
+        place(
+          bottom + center,
+          dy: -0.2cm,
+          box(width: 85%, fill: rgb("#00000066"), inset: (left:8pt, right:8pt, top:8pt, bottom: 8pt), text(fill: white, size: 14pt)[#subtitle #if not fancy-author {"by " + author}]
+        ))
       }
     ]
   } else {
@@ -216,7 +257,9 @@
   // Apply body fonts from language TOML; user's #set text(font: ...) in body overrides this
   // 注意:set 不能放在 if 块内(词法作用域不延伸到块外),改用参数字典构造后一次性 set
   // Note: set inside an if block is lexically scoped and won't leak out; build args first
-  let text-args = (size: font-size, lang: lang, fill: black)
+  // 小屏模式使用较小字号 / Screen mode uses smaller font size
+  let actual-font-size = if screen { 10pt } else { font-size }
+  let text-args = (size: actual-font-size, lang: lang, fill: black)
   if body-fonts != none {
     text-args.font = body-fonts
   }
