@@ -1,8 +1,5 @@
 #import "@preview/underhell:0.1.0": *
 
-// Read compile-time input --input print=true; defaults to false
-#let print-mode = "print" in sys.inputs and sys.inputs.print == "true"
-
 #show: dndmodule.with(
   title: "A Date with Destiny",
   subtitle: "A one-shot adventure for 4 players of levels 1-4 - with dinosaurs",
@@ -11,7 +8,6 @@
   paper: "a4",
   logo: image("img/GenericLogo.png", width: 13%),
   fancy-author: true,
-  print: print-mode,
 )
 
 #outline(title: "Table of Contents\n")

@@ -41,9 +41,13 @@
 //   bg           - 正文背景,"default" 使用默认背景,或传入自定义图 / Body background
 //   lang         - 语言代码(如 "en"/"zh"/"it"),决定加载哪个 languages/*.toml
 //                  Language code, determines which languages/*.toml to load
-//   print        - 打印模式:去除背景图/封面图、单栏、宽边距、纯黑文字、简化页脚
-//                  Print mode: no background/cover images, single column, wider margins,
-//                  pure black text, simplified footer (for ink-saving physical print)
+//   print        - 打印模式:去除背景图/封面图、双栏、宽边距、纯黑文字、简化页脚
+//                  默认自动读取编译时输入变量 --input print=true;
+//                  文档也可显式传入 print: true/false 覆盖
+//                  Print mode: no background/cover images, two columns, wider margins,
+//                  pure black text, simplified footer (for ink-saving physical print).
+//                  Defaults to reading --input print=true at compile time;
+//                  documents can override with print: true/false
 // ------------------------------------------------------------
 #let dndmodule(title: "",
               author: "",
@@ -56,7 +60,7 @@
               add-title: true,
               bg: "default",
               lang: "en",
-              print: false,
+              print: "print" in sys.inputs and sys.inputs.print == "true",
   body) = {
   // 设置文档元数据 / Set document metadata
   set document(author: author, title: title)
