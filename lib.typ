@@ -258,7 +258,7 @@
   // 注意:set 不能放在 if 块内(词法作用域不延伸到块外),改用参数字典构造后一次性 set
   // Note: set inside an if block is lexically scoped and won't leak out; build args first
   // 小屏模式使用较大字号 / Screen mode uses smaller font size
-  let actual-font-size = if screen { 8pt } else { font-size }
+  let actual-font-size = if screen { 12pt } else { font-size }
   let text-args = (size: actual-font-size, lang: lang, fill: black)
   if body-fonts != none {
     text-args.font = body-fonts
