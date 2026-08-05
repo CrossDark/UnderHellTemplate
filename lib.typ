@@ -526,25 +526,27 @@
 //   title         - 附录总标题(默认 "附录")/ Appendix master title
 //   numbering-fmt - 附录标题编号格式(默认 "A.1.",即附录 A 及其子标题 A.1, A.1.1)/
 //                   Appendix heading numbering format
-//   ..body        - 附录正文内容 / Appendix body content
+//   body         - 附录正文内容 / Appendix body content
 //
 // 用法 / Usage:
 //   #appendix[
-//     == 附录子标题
+//     = 附录子标题
 //     内容...
 //   ]
 // 也可通过 include 引入附录文件 / Or include an appendix file:
 //   #appendix[#include "附录文件.typ"]
 // ------------------------------------------------------------
-#let appendix(title: "附录", numbering-fmt: "A.1.", ..body) = [
+#let appendix(title: "附录", numbering-fmt: "A.1.", body) = [
   // 切换标题编号为字母格式(附录 A, A.1, A.1.1 ...)/
   // Switch heading numbering to letter format
   #set heading(numbering: numbering-fmt)
   // 重置标题计数器,使附录从 A 开始 / Reset heading counter so appendix starts at A
   #counter(heading).update(0)
-  // 附录总标题 / Appendix master heading
-  #heading(level: 1, title)
-  ..body
+  // 附录分区名:不作为标题,不占用编号;附录正文从一级标题开始
+  // Appendix part label: not a heading, does not consume a number; body starts at level-1 headings
+  #align(left)[#text(size: 3em, weight: "bold", fill: darkred, font: "Comic Sans MS")[#title]]
+  #v(0.6em)
+  #body
 ]
 
 // ------------------------------------------------------------
