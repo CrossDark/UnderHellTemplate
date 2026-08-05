@@ -48,10 +48,10 @@
 //                  pure black text, simplified footer (for ink-saving physical print).
 //                  Defaults to reading --input print=true at compile time;
 //                  documents can override with print: true/false
-//   screen       - 小屏模式:单栏、保留背景与彩色装饰、窄边距、较小字号
+//   screen       - 小屏模式:A5 单栏、保留背景与彩色装饰、窄边距、较小字号
 //                  适合手机/平板等窄屏设备阅读
 //                  默认自动读取编译时输入变量 --input screen=true;
-//                  Screen mode: single column, keeps background & colors, narrow margins,
+//                  Screen mode: A5 single column, keeps background & colors, narrow margins,
 //                  smaller font size. For reading on phones/tablets.
 //                  Defaults to reading --input screen=true at compile time
 // ------------------------------------------------------------
@@ -182,7 +182,9 @@
       },
     )
   }
-  set page(paper, ..page-args)
+  // 小屏模式使用 A5 纸张 / Screen mode uses A5 paper
+  let actual-paper = if screen { "a5" } else { paper }
+  set page(actual-paper, ..page-args)
 
   // 副标题非空时追加换行,便于排版 / Append newline to subtitle if non-empty
   if subtitle.len() > 0 {
@@ -258,7 +260,7 @@
   // 注意:set 不能放在 if 块内(词法作用域不延伸到块外),改用参数字典构造后一次性 set
   // Note: set inside an if block is lexically scoped and won't leak out; build args first
   // 小屏模式使用较大字号 / Screen mode uses smaller font size
-  let actual-font-size = if screen { 12pt } else { font-size }
+  let actual-font-size = if screen { 16pt } else { font-size }
   let text-args = (size: actual-font-size, lang: lang, fill: black)
   if body-fonts != none {
     text-args.font = body-fonts
