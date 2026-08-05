@@ -101,7 +101,7 @@
   let heading-fill = if print { black } else { darkred }
 
   // 一级标题样式:小型大写、深红色(打印模式为黑色)/ Level-1 heading: smallcaps
-  show heading: it => block(text(
+  show heading.where(level: 1): it => block(text(
     ..header-font-args,
     size: 1.5em,
     fill: heading-fill,
@@ -134,6 +134,7 @@
   }
 
   // 小屏模式字号在下方 text-args 中统一设置 / Screen font size set in text-args below
+  // 小屏模式使用适中字号(A5 页面)/ Screen mode uses moderate font size for A5
 
   // 根据模式构造页面参数(必须在 if 块外 set,否则词法作用域不延伸)
   // Build page args based on mode (must set outside if block due to lexical scoping)
@@ -177,8 +178,10 @@
       number-align: start,
       columns: 2,
       background: bg-img,
-      footer: context { footer.get()
+      footer: context {
+        let f = footer.get()
         footer.update(footer-content)
+        f
       },
     )
   }
@@ -259,8 +262,8 @@
   // Apply body fonts from language TOML; user's #set text(font: ...) in body overrides this
   // 注意:set 不能放在 if 块内(词法作用域不延伸到块外),改用参数字典构造后一次性 set
   // Note: set inside an if block is lexically scoped and won't leak out; build args first
-  // 小屏模式使用较大字号 / Screen mode uses smaller font size
-  let actual-font-size = if screen { 16pt } else { font-size }
+  // 小屏模式使用适中字号 / Screen mode uses moderate font size
+  let actual-font-size = if screen { 13pt } else { font-size }
   let text-args = (size: actual-font-size, lang: lang, fill: black)
   if body-fonts != none {
     text-args.font = body-fonts
@@ -375,7 +378,7 @@
 #let boxed-text(header, contents) = [
   #box(inset: 10pt, fill: rgb("#fefff9"), stroke: (right: 1pt + darkyellow, left: 1pt + darkyellow), width: 100%)[
     #set par(spacing: .6em, first-line-indent: 1.5em)
-    #set text(size: 10pt)
+    #set text(size: 0.83em)
     #heading(outlined: false, level: 3, header)
     #v(0.5em)
     #contents
@@ -391,7 +394,7 @@
 #let statbox(stats) = [
   #box(inset: 12pt, fill: white, stroke: 1pt, width: 100%)[
     #set par(spacing: .6em)
-    #set text(size: 10pt)
+    #set text(size: 0.83em)
     #heading(outlined: false, level: 3, stats.name)
 
     // 描述(斜体)/ Description (italic)
@@ -454,7 +457,7 @@
 #let npcbox(npc) = [
   #box(inset: 12pt, fill: white, stroke: 1pt, width: 100%)[
     #set par(spacing: .6em)
-    #set text(size: 10pt)
+    #set text(size: 0.83em)
     #heading(outlined: false, level: 3, npc.name)
 
     // 种族/职业/阵营(斜体,逗号分隔)/ Race/class/alignment (italic, comma-joined)
