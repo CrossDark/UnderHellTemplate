@@ -4,7 +4,7 @@
 >
 > **出处与版权**:本模板源自 [coljac/typst-dnd5e](https://github.com/coljac/typst-dnd5e)(即 Typst Universe 中的 `dragonling` 包),作者 Colin Jacobs,基于 MIT 协议发布。感谢原作者的工作。
 
-这是一个用于 DND 5E 内容的 [Typst](https://typst.app) 模板,适用于 [DMs Guild](https://www.dmsguild.com) 等场景。
+这是一个用于架空世界内容创作的 [Typst](https://typst.app) 模板,适用于冒险模组、世界设定文档、角色卡片等场景。
 
 模板名为 `underhell`,已发布至 Typst Universe,可通过 `#import "@preview/underhell:0.1.0": *` 导入。本仓库内_地狱之下_项目自身则通过相对路径引用:`#import "../模板/lib.typ": *`。
 
@@ -16,13 +16,13 @@
 
 ## 基本用法
 
-`dndmodule` 模板会为你初始化文档。你可能需要预先指定的参数如下:
+`uhmodule` 模板会为你初始化文档。你可能需要预先指定的参数如下:
 
 - `title`:文档标题,将以文字形式渲染。若封面图已含标题则可省略。
 - `subtitle`:封面底部的副标题/标语。
 - `author`:你的名字。
 - `cover`:用于封面的 `image`。
-- `fancy-author`:将作者名放在 D&D 书籍常见的红色火焰装饰中。
+- `fancy-author`:将作者名放在红色火焰装饰中。
 - `logo`:提供 `image` 以在首页放置 logo。
 - `font-size`:默认 `12pt`。
 - `paper`:默认(合理地)为 `a4`(美国用户可改用 `us-letter`)。
@@ -32,9 +32,9 @@
 
 之后,几乎所有需求都可用基础 Typst 标记完成。模板还提供以下便捷函数:
 
-`dnd`:按官方风格指南以小型大写字母打印 "Dungeons & Dragons"。
+`uhbrand`:以小型大写字母打印品牌名 "地狱之下"。
 
-`dndtab(name, columns: (1fr, 4fr), breakable: false, ..contents)`:常规格式的表格。默认 2 列、比例 1:4;若 `breakable` 为 `true`,可跨页拆分。
+`uhtab(name, columns: (1fr, 4fr), breakable: false, ..contents)`:常规格式的表格。默认 2 列、比例 1:4;若 `breakable` 为 `true`,可跨页拆分。
 
 `breakoutbox(title, contents)`:插入带彩色背景的方框,可选标题以小型大写显示。
 
@@ -136,7 +136,7 @@
 
 ## 致谢
 
-灵感来自 [DND LaTeX module](https://github.com/rpgtex/DND-5e-LaTeX-Template)。
+灵感来自 [typst-dnd5e](https://github.com/coljac/typst-dnd5e) 及 [DND LaTeX module](https://github.com/rpgtex/DND-5e-LaTeX-Template)。
 
 ## 贡献者
 

@@ -1,6 +1,6 @@
 #import "@preview/underhell:0.1.0": *
 
-#show: dndmodule.with(
+#show: uhmodule.with(
   title: "A Date with Destiny",
   subtitle: "A one-shot adventure for 4 players of levels 1-4 - with dinosaurs",
   author: "Colin Jacobs",
@@ -36,7 +36,7 @@
 
 == Adventure awaits!
 
-#dnd#super("TM") is a role playing game.
+#uhbrand#super("TM") is a fictional world building game.
 #lorem(180) OK!
 
 == A location
@@ -55,7 +55,7 @@
 
 #lorem(85)
 
-#dndtab("Random occurences", [*d10*], [*Result*], [1], [A tingling in the extremities], [2-8], [Nothing interesting occurs], [10], [All the PCs burst into flame])
+#uhtab("Random occurences", [*d10*], [*Result*], [1], [A tingling in the extremities], [2-8], [Nothing interesting occurs], [10], [All the PCs burst into flame])
 
 #lorem(150)
 

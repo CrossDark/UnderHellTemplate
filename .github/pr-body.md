@@ -1,6 +1,6 @@
 ## underhell@VERSION_PLACEHOLDER
 
-D&D 5E 风格的 Typst 文档模板,适用于冒险、属性方块、法术卡等内容。
+架空世界风格的 Typst 文档模板,适用于冒险、属性方块、法术卡、世界设定等内容。
 
 - 包名: `underhell`
 - 版本: `VERSION_PLACEHOLDER`
@@ -13,7 +13,7 @@ D&D 5E 风格的 Typst 文档模板,适用于冒险、属性方块、法术卡�
 ### 用法示例
 ```typst
 #import "@preview/underhell:VERSION_PLACEHOLDER": *
-#show: dndmodule.with(title: "My Adventure", author: "Me")
+#show: uhmodule.with(title: "My Adventure", author: "Me")
 ```
 
 此 PR 由 [UnderHellTemplate](https://github.com/CrossDark/UnderHellTemplate) 的 GitHub Action 自动创建。

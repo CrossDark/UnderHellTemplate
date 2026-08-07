@@ -1,12 +1,12 @@
 // ============================================================
-// typst-dnd5e 主题库 / Theme Library
-// 提供 D&D 5e 风格的文档排版组件 / D&D 5e styled document components
+// 地狱之下模板库 / UnderHell Template Library
+// 提供架空世界风格的文档排版组件 / Fictional-world styled document components
 // ============================================================
 
 // 主题色定义 / Theme color definitions
 #let darkred = rgb("#540808")     // 深红色:用于标题、强调线条 / Dark red: for headings, accent lines
 #let darkyellow = rgb("#fcba03")  // 暗黄色:用于二级标题下划线 / Dark yellow: for level-2 heading underline
-#let dnd = smallcaps("Dungeons & Dragons")  // D&D 商标文本(小型大写)/ D&D trademark text (smallcaps)
+#let uhbrand = smallcaps("地狱之下")  // 品牌文本(小型大写)/ Brand text (smallcaps)
 
 // 页脚内容生成器 / Footer content generator
 // 第 1 页之后显示页脚图片与页码 / Show footer image and page number after page 1
@@ -24,9 +24,9 @@
 #let language = state("language", toml("languages/en.toml"))
 
 // ------------------------------------------------------------
-// dndmodule:文档主模板 / Main document template
-// 用作 #show: dndmodule.with(...) 应用整篇文档样式
-// Used via #show: dndmodule.with(...) to apply document-wide styling
+// uhmodule:文档主模板 / Main document template
+// 用作 #show: uhmodule.with(...) 应用整篇文档样式
+// Used via #show: uhmodule.with(...) to apply document-wide styling
 //
 // 参数 / Parameters:
 //   title        - 文档标题(封面大标题)/ Document title (cover headline)
@@ -55,7 +55,7 @@
 //                  smaller font size. For reading on phones/tablets.
 //                  Defaults to reading --input screen=true at compile time
 // ------------------------------------------------------------
-#let dndmodule(title: "",
+#let uhmodule(title: "",
               author: "",
               subtitle: "",
               cover: none,
@@ -276,13 +276,13 @@
 
 
 // ------------------------------------------------------------
-// dndtab:生成 D&D 风格的表格区块 / D&D style table block
+// uhtab:生成地狱之下风格的表格区块 / UnderHell style table block
 //   name     - 表格标题 / Table title
 //   columns  - 列宽配置(默认 (1fr, 4fr))/ Column widths
 //   breakable - 是否允许跨页 / Whether the block can break across pages
 //   contents  - 表格内容(按行展开)/ Table contents (spread as rows)
 // ------------------------------------------------------------
-#let dndtab(name, columns: (1fr, 4fr), breakable: false, ..contents) = [
+#let uhtab(name, columns: (1fr, 4fr), breakable: false, ..contents) = [
   #block(breakable: breakable)[
   // 标题:小型大写 + 1.3em 字号 / Title: smallcaps, 1.3em size
   *#smallcaps(text(size: 1.3em)[#name])*
@@ -338,7 +338,7 @@
 // ------------------------------------------------------------
 
 // bonus:根据属性值计算修正值字符串 / Compute modifier string from ability score
-// D&D 5e 规则:(score - 10) / 2 向下取整,>=10 为正 / Rule: floor((score-10)/2), "+" if >= 10
+// 规则:(score - 10) / 2 向下取整,>=10 为正 / Rule: floor((score-10)/2), "+" if >= 10
 #let bonus(i) = {
   let b = ""
   if i >= 10 {
@@ -553,13 +553,11 @@
 ]
 
 // ------------------------------------------------------------
-// trademarks:商标与版权声明 / Trademark and copyright notice
-// 用于文档末尾的法定声明 / Used at the end of the document for legal notice
+// trademarks:版权声明 / Copyright notice
+// 用于文档末尾的版权声明 / Used at the end of the document for copyright notice
 // ------------------------------------------------------------
 #let trademarks = text(size: 0.9em, style: "italic")[
-  #dnd D&D, Wizards of the Coast, Forgotten Realms, Ravenloft, Eberron, the dragon ampersand, Ravnica and all other Wizards of the Coast product names, and their respective logos are trademarks of Wizards of the Coast in the USA and other countries.
+  #uhbrand 及其相关标识均为本项目原创内容。本作品中的所有设定、角色、地名及世界观均为虚构,如有雷同纯属巧合。
 
-This work contains material that is copyright Wizards of the Coast and/or other authors. Such material is used with permission under the Community Content Agreement for Dungeon Masters Guild.
-
-All other original material in this work is copyright 2023 by the author and published under the Community Content Agreement for Dungeon Masters Guild.
+All original material in this work is copyright by the respective authors and published under the MIT License.
 ]
